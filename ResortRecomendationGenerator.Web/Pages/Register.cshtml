@@ -1,0 +1,113 @@
+﻿@page
+@model ResortRecomendationGenerator.Web.Pages.RegisterModel
+@{
+    ViewData["Title"] = "RRG - Register";
+}
+
+<div class="text-center text-light">
+    <div class="row">
+        <h1 class="col-12">Create an Account</h1>
+    </div>
+    <form method="post" asp-page-handler="Register">
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <div class="form-floating col-4">
+                <input asp-for="ViewModel.FirstName" class="form-control" placeholder=" " />
+                <label for="ViewModel_FirstName" class="form-label text-dark ms-2">First Name</label>
+                <span class="text-danger" asp-validation-for="ViewModel.FirstName"></span>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <div class="form-floating col-4">
+                <input asp-for="ViewModel.LastName" class="form-control" placeholder=" " />
+                <label for="ViewModel_LastName" class="form-label text-dark ms-2">Last Name</label>
+                <span class="text-danger" asp-validation-for="ViewModel.LastName"></span>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <div class="form-floating col-4">
+                <input asp-for="ViewModel.Email" class="form-control" placeholder=" " />
+                <label for="ViewModel_Email" class="form-label text-dark ms-2">Email</label>
+                <span class="text-danger" asp-validation-for="ViewModel.Email"></span>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <div class="form-floating col-4">
+                <input asp-for="ViewModel.Password" class="form-control" placeholder=" " type="password" />
+                <label for="ViewModel_Password" class="form-label text-dark ms-2">Password</label>
+                <span class="text-danger" asp-validation-for="ViewModel.Password"></span>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <div class="form-floating col-4">
+                <input id="ConfirmPassword" class="form-control" placeholder=" " type="password" />
+                <label for="ConfirmPassword" class="form-label text-dark ms-2">Confirm Password</label>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4"></div>
+            <button id="BtnSubmit" type="submit" class="col-4 btn btn-success" disabled>Register</button>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-4"></div>
+            <span id="ErrorMessage" class="col-4 text-danger"></span>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <span class="col-4">Already have an account? <a class="link-primary" href="/Index">Login</a></span>
+            <div class="col-4"></div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        const txtPass = document.querySelector('#ViewModel_Password');
+        const txtConfirmPass = document.querySelector('#ConfirmPassword');
+
+        const btnSubmit = document.querySelector('#BtnSubmit');
+
+        const errorMsgBox = document.querySelector('#ErrorMessage');
+
+        for (const element of [txtPass, txtConfirmPass])
+            element.addEventListener('keyup', checkPassMatch);
+
+        function checkPassMatch() {
+            errorMsgBox.textContent = '';
+
+            let pass = txtPass.value.trim();
+            let confirmPass = txtConfirmPass.value.trim();
+
+            if (pass === '' && confirmPass === '')
+                return;
+
+            if (pass === confirmPass) {
+                errorMsgBox.setAttribute('class', 'text-success');
+                errorMsgBox.textContent = 'Passwords match!';
+
+                btnSubmit.disabled = false;
+            }
+            else {
+                errorMsgBox.setAttribute('class', 'text-danger');
+                errorMsgBox.textContent = 'Passwords do not match!';
+
+                btnSubmit.disabled = true;
+            }
+        }
+
+    </script>
+
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ResortRecommendationGenerator.Core.Models.DecryptedModels;
 using ResortRecommendationGenerator.Core.Models.EncryptedModels;
 
 namespace ResortRecommendationGenerator.Core.DataAccess
@@ -9,5 +10,6 @@ namespace ResortRecommendationGenerator.Core.DataAccess
 
 
         public DbSet<EncryptedAccount> Account { get; set; }
+        public DbSet<SkiResort> SkiResort { get; set; }
     }
 }

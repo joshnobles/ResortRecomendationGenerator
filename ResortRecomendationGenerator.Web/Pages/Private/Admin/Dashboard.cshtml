@@ -1,0 +1,35 @@
+﻿@page
+@model ResortRecomendationGenerator.Web.Pages.Private.Admin.DashboardModel
+@{
+    ViewData["Title"] = "RRG - Admin";
+}
+
+<div class="text-center text-light">
+    <div class="row">
+        <h1 class="col-12">Admin</h1>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 container">
+            <div class="row">
+                <h3 class="col-12">Resort List</h3>
+            </div>
+            <div class="row mt-2">
+                <div class="col-3"></div>
+                <div class="col-6 form-floating">
+                    <input id="TxtResortSearch" class="form-control" placeholder=" " />
+                    <label for="TxtResortSearch" class="form-label text-dark ms-2">Search</label>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="row mt-3">
+                <div id="ResortListContainer" class="col-12 mx-1 overflow-auto container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/js/AdminDashboard.js" type="module"></script>
+
+}
