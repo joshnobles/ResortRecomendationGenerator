@@ -14,12 +14,14 @@
                 <h3 class="col-12">Resort List</h3>
             </div>
             <div class="row mt-2">
-                <div class="col-3"></div>
                 <div class="col-6 form-floating">
                     <input id="TxtResortSearch" class="form-control" placeholder=" " />
                     <label for="TxtResortSearch" class="form-label text-dark ms-2">Search</label>
                 </div>
                 <div class="col-3"></div>
+                <div class="col-3">
+                    <button id="BtnOpenAddResortModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddResortModal">Add Resort</button>
+                </div>
             </div>
             <div class="row mt-3">
                 <div id="ResortListContainer" class="col-12 mx-1 overflow-auto container"></div>
@@ -31,5 +33,87 @@
 @section Scripts {
 
     <script src="~/js/AdminDashboard.js" type="module"></script>
+
+}
+
+@section Modals {
+
+    <div class="modal fade" id="AddResortModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AddResortModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="AddResortModalLabel">Add Resort</h1>
+                </div>
+                <div class="modal-body container">
+                    <div class="row">
+                        <div class="col-12 form-floating">
+                            <input id="TxtNewResortName" class="form-control" type="text" placeholder=" " />
+                            <label for="TxtNewResortName" class="form-label text-dark ms-2">Name</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtNewResortElevation" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortElevation" class="form-label text-dark ms-2">Elevation</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 form-floating">
+                            <input id="TxtNewResortNumGreenRuns" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortNumNumGreenRuns" class="form-label text-dark ms-2">Green Run #</label>
+                        </div>
+                        <div class="col-6 form-floating">
+                            <input id="TxtNewResortNumNumBlueRuns" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortNumNumBlueRuns" class="form-label text-dark ms-2">Blue Run #</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 form-floating">
+                            <input id="TxtNewResortNumNumBlackRuns" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortNumNumBlackRuns" class="form-label text-dark ms-2">Black Run #</label>
+                        </div>
+                        <div class="col-6 form-floating">
+                            <input id="TxtNewResortNumNumDubBlackRuns" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortNumNumDubBlackRuns" class="form-label text-dark ms-2">Double Black Run #</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtNewResortNumNumLifts" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortNumNumLifts" class="form-label text-dark ms-2">Lift #</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2 ms-2">
+                        <div class="col-12 form-check">
+                            <input id="ChkNewResortNumIsEpicPass" class="form-check-input" type="checkbox" value="" />
+                            <label for="ChkNewResortNumIsEpicPass" class="form-check-label text-dark">Epic Pass</label>
+                        </div>
+                        <div class="col-12 form-check">
+                            <input id="ChkNewResortNumIsIkonPass" class="form-check-input" type="checkbox" value="" />
+                            <label for="ChkNewResortNumIsIkonPass" class="form-check-label text-dark">Ikon Pass</label>
+                        </div>
+                        <div class="col-12 form-check">
+                            <input id="ChkNewResortNumIsIndyPass" class="form-check-input" type="checkbox" value="" />
+                            <label for="ChkNewResortNumIsIndyPass" class="form-check-label text-dark">Indy Pass</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 form-floating">
+                            <input id="TxtNewResortLatitude" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortLatitude" class="form-label text-dark ms-2">Latitude</label>
+                        </div>
+                        <div class="col-6 form-floating">
+                            <input id="TxtNewResortLongitude" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortLongitude" class="form-label text-dark ms-2">Longitude</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnClearNewResortForm" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="BtnSubmitNewResortForm" type="button" class="btn btn-success">Save New Resort</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 }
