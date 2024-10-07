@@ -1,12 +1,20 @@
-﻿class AddResortFormHandler {
+﻿import ApiKey from '../Modules/ApiKey.js';
+
+class AddResortFormHandler {
     constructor() {
 
         this.txtNewResortName = document.querySelector('#TxtNewResortName');
         this.txtNewResortElevation = document.querySelector('#TxtNewResortElevation');
-        this.txtNewResortNumGreenRuns = document.querySelector('#TxtNewResortNumGreenRuns');
-        this.txtNewResortNumNumBlueRuns = document.querySelector('#TxtNewResortNumNumBlueRuns');
-        this.txtNewResortNumNumBlackRuns = document.querySelector('#TxtNewResortNumNumBlackRuns');
-        this.txtNewResortNumNumDubBlackRuns = document.querySelector('#TxtNewResortNumNumDubBlackRuns');
+
+        this.txtNewResortTotalRuns = document.querySelector('#TxtNewResortTotalRuns');
+        this.txtNewResortGreenPercent = document.querySelector('#TxtNewResortGreenPercent');
+        this.txtNewResortBluePercent = document.querySelector('#TxtNewResortBluePercent');
+        this.txtNewResortBlackPercent = document.querySelector('#TxtNewResortBlackPercent');
+        this.txtNewResortTerrainParkNum = document.querySelector('#TxtNewResortTerrainParkNum');
+
+        this.txtNewResortSnowmakingCoverage = document.querySelector('#TxtNewResortSnowmakingCoverage');
+        this.txtNewResortSkiableAcres = document.querySelector('#TxtNewResortSkiableAcres');
+
         this.txtNewResortNumNumLifts = document.querySelector('#TxtNewResortNumNumLifts');
 
         this.chkNewResortNumIsEpicPass = document.querySelector('#ChkNewResortNumIsEpicPass');
@@ -30,7 +38,6 @@
             return;
 
         try {
-
             const options = {
                 method: 'POST',
                 headers: {
@@ -40,7 +47,7 @@
                 body: JSON.stringify(newResort)
             }
 
-            const res = await fetch('/api/SkiResort/AddResort', options);
+            const res = await fetch(`/api/SkiResort/AddResort?key=${ApiKey}`, options);
 
             if (!res.ok)
                 throw new Error(res.status);
@@ -65,10 +72,16 @@
 
         let name = this.txtNewResortName.value.trim();
         let elevation = parseFloat(this.txtNewResortElevation.value.trim());
-        let numGreen = parseFloat(this.txtNewResortNumGreenRuns.value.trim());
-        let numBlue = parseFloat(this.txtNewResortNumNumBlueRuns.value.trim());
-        let numBlack = parseFloat(this.txtNewResortNumNumBlackRuns.value.trim());
-        let numDubBlack = parseFloat(this.txtNewResortNumNumDubBlackRuns.value.trim());
+
+        let totalRuns = parseFloat(this.txtNewResortTotalRuns.value.trim());
+        let greenPercent = parseFloat(this.txtNewResortGreenPercent.value.trim());
+        let bluePercent = parseFloat(this.txtNewResortBluePercent.value.trim());
+        let blackPercent = parseFloat(this.txtNewResortBlackPercent.value.trim());
+        let terrainParkNum = parseFloat(this.txtNewResortTerrainParkNum.value.trim());
+
+        let snowmakingCoverage = parseFloat(this.txtNewResortSnowmakingCoverage.value.trim());
+        let skiableAcres = parseFloat(this.txtNewResortSkiableAcres.value.trim());
+
         let numLifts = parseFloat(this.txtNewResortNumNumLifts.value.trim());
 
         let isEpic = this.chkNewResortNumIsEpicPass.checked;
@@ -86,17 +99,26 @@
         if (isNaN(elevation))
             errors.push('Elevation must be a number!');
 
-        if (isNaN(numGreen))
-            errors.push('Green run count must be a number!');
+        if (isNaN(totalRuns))
+            errors.push('Total run count must be a number!');
 
-        if (isNaN(numBlue))
-            errors.push('Blue run count must be a number!');
+        if (isNaN(greenPercent))
+            errors.push('Green run percent must be a number!');
 
-        if (isNaN(numBlack))
-            errors.push('Black run count must be a number!');
+        if (isNaN(bluePercent))
+            errors.push('Blue run percent must be a number!');
 
-        if (isNaN(numDubBlack))
-            errors.push('Double black run count must be a number!');
+        if (isNaN(blackPercent))
+            errors.push('Black run percent must be a number!');
+
+        if (isNaN(terrainParkNum))
+            errors.push('Terrain park count must be a number!');
+
+        if (isNaN(snowmakingCoverage))
+            errors.push('Snowmaking coverage must be a number!');
+
+        if (isNaN(skiableAcres))
+            errors.push('Skiable acres must be a number!');
 
         if (isNaN(numLifts))
             errors.push('Lift count must be a number!');
@@ -121,10 +143,13 @@
         return {
             name: name,
             elevation: elevation,
-            numGreenRuns: numGreen,
-            numBlueRuns: numBlue,
-            numBlackRuns: numBlack,
-            numDubBlackRuns: numDubBlack,
+            totalRuns: totalRuns,
+            greenPercent: greenPercent,
+            bluePercent: bluePercent,
+            blackPercent: blackPercent,
+            terrainParkNum: terrainParkNum,
+            snowmakingCoverage: snowmakingCoverage,
+            skiableAcres: skiableAcres,
             numLifts: numLifts,
             isEpicPass: isEpic,
             isIkonPass: isIkon,
@@ -145,10 +170,16 @@
     clearForm = () => {
         this.txtNewResortName.value = '';
         this.txtNewResortElevation.value = '';
-        this.txtNewResortNumGreenRuns.value = '';
-        this.txtNewResortNumNumBlueRuns.value = '';
-        this.txtNewResortNumNumBlackRuns.value = '';
-        this.txtNewResortNumNumDubBlackRuns.value = '';
+
+        this.txtNewResortTotalRuns.value = '';
+        this.txtNewResortGreenPercent.value = '';
+        this.txtNewResortBluePercent.value = '';
+        this.txtNewResortBlackPercent.value = '';
+        this.txtNewResortTerrainParkNum.value = '';
+
+        this.txtNewResortSnowmakingCoverage.value = '';
+        this.txtNewResortSkiableAcres.value = '';
+
         this.txtNewResortNumNumLifts.value = '';
 
         this.chkNewResortNumIsEpicPass.checked = false;

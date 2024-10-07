@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using ResortRecomendationGenerator.Web.ViewModels;
+using ResortRecommendationGenerator.Core.DataAccess;
 using ResortRecommendationGenerator.Core.Exceptions;
 using ResortRecommendationGenerator.Core.Services.Interfaces;
 
@@ -9,14 +11,32 @@ namespace ResortRecomendationGenerator.Web.Pages
     public class IndexModel : PageModel
     {
         private readonly IAccountRepository _accountRepo;
+        private readonly Context _context;
+        private readonly ISecurity _sec;
 
-        public IndexModel(IAccountRepository accountRepo)
+        public IndexModel(IAccountRepository accountRepo, Context context, ISecurity sec)
         {
             _accountRepo = accountRepo;
+            _context = context;
+            _sec = sec;
         }
 
         [BindProperty]
         public LoginViewModel ViewModel { get; set; } = new();
+
+        public async Task OnGet()
+        {
+            var key = await _context.ApiKey.FirstOrDefaultAsync(k => k.IdAccount == 1);
+
+            var text = await _sec.DecryptAsync(key.Value);
+
+            var enc = await _sec.EncryptAsync(text);
+
+            var newText = await _sec.DecryptAsync(enc);
+
+            Console.WriteLine(text);
+            Console.WriteLine(newText);
+        }
 
         public async Task<IActionResult> OnPostLogin(CancellationToken token = default)
         {

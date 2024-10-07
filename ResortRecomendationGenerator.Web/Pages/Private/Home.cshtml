@@ -1,0 +1,51 @@
+﻿@page
+@model ResortRecomendationGenerator.Web.Pages.Private.HomeModel
+@{
+    ViewData["Title"] = "RRG - Welcome";
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
+
+    <style>
+
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+
+        .leaflet-popup-content {
+            width: 100px;
+        }
+
+    </style>
+
+}
+
+<div class="text-center text-light">
+    <div class="row">
+        <h1 class="col-12">Welcome @Model.CurrentAccount.FirstName</h1>
+    </div>
+    <div class="row mt-2">
+        <div class="col-8 container">
+            <div class="row">
+                <h3 class="col-12">Our Resorts</h3>
+            </div>
+            <div class="row">
+                <div id="map"></div>
+            </div>
+        </div>
+        <div class="col-4">
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/lib/leaflet/leaflet.js"></script>
+
+    <script src="~/js/Modules/MapHandler.js" type="module"></script>
+
+}

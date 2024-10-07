@@ -18,7 +18,6 @@ namespace ResortRecommendationGenerator.Core.Services.Implementations
             _security = security;
         }
 
-
         public async Task<bool> AccountExistsAsync(string email, CancellationToken token)
         {
             var encEmail = await _security.EncryptAsync(email);

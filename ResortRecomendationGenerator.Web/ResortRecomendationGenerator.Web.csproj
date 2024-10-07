@@ -7,7 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\Modules\ApiKey.js" />
+    <Content Remove="wwwroot\js\Modules\EditResortFormHandler.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\Modules\ApiKey.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\Modules\EditResortFormHandler.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\Modules\ApiKey.js" />
+    <None Include="wwwroot\js\Modules\EditResortFormHandler.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ResortRecommendationGenerator.Core\ResortRecommendationGenerator.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\leaflet\" />
   </ItemGroup>
 
 </Project>

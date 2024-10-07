@@ -8,21 +8,30 @@ namespace ResortRecomendationGenerator.Web.ViewModels
         [StringLength(50)]
         [RegularExpression(@"^[A-Za-z0-9 '-]{4,50}$")]
         public string Name { get; set; } = string.Empty;
-
+        
         [Required]
         public double Elevation { get; set; }
 
         [Required]
-        public int NumGreenRuns { get; set; }
+        public int TotalRuns { get; set; }
 
         [Required]
-        public int NumBlueRuns { get; set; }
+        public double GreenPercent { get; set; }
 
         [Required]
-        public int NumBlackRuns { get; set; }
+        public double BluePercent { get; set; }
 
         [Required]
-        public int NumDubBlackRuns { get; set; }
+        public double BlackPercent { get; set; }
+
+        [Required]
+        public int TerrainParkNum { get; set; }
+
+        [Required]
+        public double SnowmakingCoverage { get; set; }
+
+        [Required]
+        public int SkiableAcres { get; set; }
 
         [Required]
         public int NumLifts { get; set; }

@@ -4,29 +4,46 @@
     ViewData["Title"] = "RRG - Admin";
 }
 
+@section Styles {
+
+    <style>
+        #ResortListItem {
+            background-color: slategray;
+            border: 1px solid black;
+        }
+    </style>
+
+}
+
 <div class="text-center text-light">
     <div class="row">
         <h1 class="col-12">Admin</h1>
     </div>
     <div class="row mt-2">
-        <div class="col-12 container">
+        <div class="col-6 container">
             <div class="row">
                 <h3 class="col-12">Resort List</h3>
             </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4 text-center align-content-center">
+                    <button id="BtnOpenAddResortModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddResortModal">Add Resort</button>
+                </div>
+                <div class="col-4"></div>
+            </div>
             <div class="row mt-2">
-                <div class="col-6 form-floating">
+                <div class="col-2"></div>
+                <div class="col-8 form-floating">
                     <input id="TxtResortSearch" class="form-control" placeholder=" " />
                     <label for="TxtResortSearch" class="form-label text-dark ms-2">Search</label>
                 </div>
-                <div class="col-3"></div>
-                <div class="col-3">
-                    <button id="BtnOpenAddResortModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddResortModal">Add Resort</button>
-                </div>
+                <div class="col-2"></div>
             </div>
             <div class="row mt-3">
                 <div id="ResortListContainer" class="col-12 mx-1 overflow-auto container"></div>
             </div>
         </div>
+        <div class="col-6 container"></div>
     </div>
 </div>
 
@@ -58,23 +75,39 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-6 form-floating">
-                            <input id="TxtNewResortNumGreenRuns" class="form-control" type="number" placeholder=" " />
-                            <label for="TxtNewResortNumNumGreenRuns" class="form-label text-dark ms-2">Green Run #</label>
+                        <div class="col-12 form-floating">
+                            <input id="TxtNewResortTotalRuns" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortTotalRuns" class="form-label text-dark ms-2">Total Run #</label>
                         </div>
-                        <div class="col-6 form-floating">
-                            <input id="TxtNewResortNumNumBlueRuns" class="form-control" type="number" placeholder=" " />
-                            <label for="TxtNewResortNumNumBlueRuns" class="form-label text-dark ms-2">Blue Run #</label>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4 form-floating">
+                            <input id="TxtNewResortGreenPercent" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortGreenPercent" class="form-label text-dark ms-2">Green Run %</label>
+                        </div>
+                        <div class="col-4 form-floating">
+                            <input id="TxtNewResortBluePercent" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortBluePercent" class="form-label text-dark ms-2">Blue Run %</label>
+                        </div>
+                        <div class="col-4 form-floating">
+                            <input id="TxtNewResortBlackPercent" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortBlackPercent" class="form-label text-dark ms-2">Black Run %</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtNewResortTerrainParkNum" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortTerrainParkNum" class="form-label text-dark ms-2">Terrain Park #</label>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-6 form-floating">
-                            <input id="TxtNewResortNumNumBlackRuns" class="form-control" type="number" placeholder=" " />
-                            <label for="TxtNewResortNumNumBlackRuns" class="form-label text-dark ms-2">Black Run #</label>
+                            <input id="TxtNewResortSnowmakingCoverage" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortSnowmakingCoverage" class="form-label text-dark ms-2">Snowmaking Coverage %</label>
                         </div>
                         <div class="col-6 form-floating">
-                            <input id="TxtNewResortNumNumDubBlackRuns" class="form-control" type="number" placeholder=" " />
-                            <label for="TxtNewResortNumNumDubBlackRuns" class="form-label text-dark ms-2">Double Black Run #</label>
+                            <input id="TxtNewResortSkiableAcres" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtNewResortSkiableAcres" class="form-label text-dark ms-2">Skiable Acres</label>
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -111,6 +144,100 @@
                 <div class="modal-footer">
                     <button id="BtnClearNewResortForm" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button id="BtnSubmitNewResortForm" type="button" class="btn btn-success">Save New Resort</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditResortModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EditResortModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditResortModalLabel">Edit Resort</h1>
+                </div>
+                <div id="EditResortForm" class="modal-body container">
+                    <div class="row">
+                        <div class="col-12 form-floating">
+                            <input id="TxtEditResortName" class="form-control" type="text" placeholder=" " />
+                            <label for="TxtEditResortName" class="form-label text-dark ms-2">Name</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtEditResortElevation" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortElevation" class="form-label text-dark ms-2">Elevation</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtEditResortTotalRuns" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortTotalRuns" class="form-label text-dark ms-2">Total Run #</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4 form-floating">
+                            <input id="TxtEditResortGreenPercent" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortGreenPercent" class="form-label text-dark ms-2">Green Run %</label>
+                        </div>
+                        <div class="col-4 form-floating">
+                            <input id="TxtEditResortBluePercent" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortBluePercent" class="form-label text-dark ms-2">Blue Run %</label>
+                        </div>
+                        <div class="col-4 form-floating">
+                            <input id="TxtEditResortBlackPercent" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortBlackPercent" class="form-label text-dark ms-2">Black Run %</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtEditResortTerrainParkNum" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortTerrainParkNum" class="form-label text-dark ms-2">Terrain Park #</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 form-floating">
+                            <input id="TxtEditResortSnowmakingCoverage" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortSnowmakingCoverage" class="form-label text-dark ms-2">Snowmaking Coverage %</label>
+                        </div>
+                        <div class="col-6 form-floating">
+                            <input id="TxtEditResortSkiableAcres" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortSkiableAcres" class="form-label text-dark ms-2">Skiable Acres</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 form-floating">
+                            <input id="TxtEditResortNumNumLifts" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortNumNumLifts" class="form-label text-dark ms-2">Lift #</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2 ms-2">
+                        <div class="col-12 form-check">
+                            <input id="ChkEditResortNumIsEpicPass" class="form-check-input" type="checkbox" value="" />
+                            <label for="ChkEditResortNumIsEpicPass" class="form-check-label text-dark">Epic Pass</label>
+                        </div>
+                        <div class="col-12 form-check">
+                            <input id="ChkEditResortNumIsIkonPass" class="form-check-input" type="checkbox" value="" />
+                            <label for="ChkEditResortNumIsIkonPass" class="form-check-label text-dark">Ikon Pass</label>
+                        </div>
+                        <div class="col-12 form-check">
+                            <input id="ChkEditResortNumIsIndyPass" class="form-check-input" type="checkbox" value="" />
+                            <label for="ChkEditResortNumIsIndyPass" class="form-check-label text-dark">Indy Pass</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 form-floating">
+                            <input id="TxtEditResortLatitude" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortLatitude" class="form-label text-dark ms-2">Latitude</label>
+                        </div>
+                        <div class="col-6 form-floating">
+                            <input id="TxtEditResortLongitude" class="form-control" type="number" placeholder=" " />
+                            <label for="TxtEditResortLongitude" class="form-label text-dark ms-2">Longitude</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnClearEditResortForm" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="BtnSubmitEditResortForm" type="button" class="btn btn-success">Save Changes</button>
                 </div>
             </div>
         </div>

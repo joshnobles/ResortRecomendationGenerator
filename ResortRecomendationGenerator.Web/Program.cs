@@ -41,6 +41,9 @@ namespace ResortRecomendationGenerator.Web
             // Register account repository through dependency injection
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             
+            // Register API key repository through dependency injection
+            builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
+
             // Add session varaibles to the application
             builder.Services.AddSession(options =>
             {

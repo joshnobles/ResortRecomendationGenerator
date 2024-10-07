@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>@ViewData["Title"]</title>
-
+        
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
         <link rel="stylesheet" href="~/css/site.css" />
@@ -17,7 +17,7 @@
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
                 <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <a class="navbar-brand" asp-area="" asp-page="/Private/Home">
                         <img id="MainIcon" src="~/images/mountain_range_icon.png" alt="Mountain Range Icon" />
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,12 +25,40 @@
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-secondary fs-5" asp-area="" asp-page="/Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-secondary fs-5" asp-area="" asp-page="/Privacy">Privacy</a>
-                            </li>
+                            @{
+                                var idAccount = Context.Session.GetInt32("IdAccount");
+                                var isAdmin = Context.Session.GetInt32("IsAdmin");
+
+                                if (idAccount is not null)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-secondary fs-5" asp-area="" asp-page="/Private/Home">Home</a>
+                                    </li>
+                                }
+
+                                if (isAdmin is not null && isAdmin == 1)
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle text-secondary fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Admin
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-area="" asp-page="/Private/Admin/Dashboard">Dashboard</a></li>
+                                        </ul>
+                                    </li>
+                                }
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-secondary fs-5" asp-area="" asp-page="/Privacy">Privacy</a>
+                                </li>
+
+                                if (idAccount is not null)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-danger fs-5" asp-area="" asp-page="/Logout">Logout</a>
+                                    </li>
+                                }
+                            }
                         </ul>
                     </div>
                 </div>
