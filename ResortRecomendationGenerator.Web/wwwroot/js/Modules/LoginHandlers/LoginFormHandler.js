@@ -14,7 +14,7 @@
 
     submitLogin = async () => {
         if (document.querySelector('#Email').value == 'github') {
-            location.replace();
+            location.replace("https://github.com/joshnobles/ResortRecomendationGenerator");
             return;
         }
 
