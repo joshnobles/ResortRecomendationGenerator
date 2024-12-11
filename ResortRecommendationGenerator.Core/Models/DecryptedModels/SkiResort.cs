@@ -9,7 +9,7 @@ namespace ResortRecommendationGenerator.Core.Models.DecryptedModels
         [Key]
         public int IdSkiResort { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = null!;
 
         public double Elevation { get; set; }
 
@@ -34,6 +34,8 @@ namespace ResortRecommendationGenerator.Core.Models.DecryptedModels
         public bool IsIkonPass { get; set; }
 
         public bool IsIndyPass { get; set; }
+
+        public string Description { get; set; } = null!;
 
         public double Latitude { get; set; }
 

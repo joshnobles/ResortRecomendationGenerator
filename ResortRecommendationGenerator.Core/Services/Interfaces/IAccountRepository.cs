@@ -8,8 +8,8 @@ namespace ResortRecommendationGenerator.Core.Services.Interfaces
 
         public Task<Account> LoginAccountAsync(string email, string password, CancellationToken token);
 
-        public Task<bool> AccountExistsAsync(string email, CancellationToken token);
+        public Task<bool> AccountExistsAsync(string email, string phone, CancellationToken token);
 
-        public Task<int> AddAccountAsync(string email, string password, string firstName, string lastName, bool isAdmin, CancellationToken token);
+        public Task<int> AddAccountAsync(string email, string phone, string password, string firstName, string lastName, bool isAdmin, CancellationToken token);
     }
 }

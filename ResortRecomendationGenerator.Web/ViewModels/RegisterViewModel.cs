@@ -14,6 +14,10 @@ namespace ResortRecomendationGenerator.Web.ViewModels
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Required]
+        [RegularExpression(@"^[0-9]{10}$")]
+        public string Phone { get; set; }
+
         [Required(ErrorMessage = "Email is Required")]
         [EmailAddress(ErrorMessage = "Invalid Email")]
         public string Email { get; set; }
@@ -25,6 +29,7 @@ namespace ResortRecomendationGenerator.Web.ViewModels
         {
             FirstName = string.Empty;
             LastName = string.Empty;
+            Phone = string.Empty;
             Email = string.Empty;
             Password = string.Empty;
         }
@@ -33,6 +38,7 @@ namespace ResortRecomendationGenerator.Web.ViewModels
         {
             FirstName = FirstName.Trim();
             LastName = LastName.Trim();
+            Phone = Phone.Trim();
             Email = Email.Trim();
             Password = Password.Trim();
         }

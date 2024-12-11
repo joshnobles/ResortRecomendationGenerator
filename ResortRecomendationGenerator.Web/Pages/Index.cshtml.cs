@@ -1,65 +1,92 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using ResortRecomendationGenerator.Web.ViewModels;
-using ResortRecommendationGenerator.Core.DataAccess;
 using ResortRecommendationGenerator.Core.Exceptions;
 using ResortRecommendationGenerator.Core.Services.Interfaces;
+using Twilio.Rest.Verify.V2.Service;
+using Twilio;
+using System.Threading.Channels;
+using ResortRecomendationGenerator.Web.Twilio;
+using ResortRecommendationGenerator.Core.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using ResortRecommendationGenerator.Core.Services.Static;
+using Twilio.Exceptions;
+using ResortRecommendationGenerator.Core.Models.DecryptedModels;
 
 namespace ResortRecomendationGenerator.Web.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly IAccountRepository _accountRepo;
-        private readonly Context _context;
-        private readonly ISecurity _sec;
+        private readonly ITwilioService _twilio;
 
-        public IndexModel(IAccountRepository accountRepo, Context context, ISecurity sec)
+        public IndexModel(IAccountRepository accountRepo, ITwilioService twilio)
         {
             _accountRepo = accountRepo;
-            _context = context;
-            _sec = sec;
+            _twilio = twilio;
         }
 
-        [BindProperty]
-        public LoginViewModel ViewModel { get; set; } = new();
-
-        public async Task OnGet()
+        public async Task<IActionResult> OnPostLogin([FromBody] LoginViewModel viewModel, CancellationToken token = default)
         {
-            var key = await _context.ApiKey.FirstOrDefaultAsync(k => k.IdAccount == 1);
-
-            var text = await _sec.DecryptAsync(key.Value);
-
-            var enc = await _sec.EncryptAsync(text);
-
-            var newText = await _sec.DecryptAsync(enc);
-
-            Console.WriteLine(text);
-            Console.WriteLine(newText);
-        }
-
-        public async Task<IActionResult> OnPostLogin(CancellationToken token = default)
-        {
-            if (!ModelState.IsValid || ViewModel.Email is null || ViewModel.Password is null)
-                return Page();
-
-            ViewModel.TrimValues();
+            if (!Valid.ViewModel(viewModel))
+                return BadRequest();
 
             try
             {
-                var account = await _accountRepo.LoginAccountAsync(ViewModel.Email, ViewModel.Password, token);
+                var account = await _accountRepo.LoginAccountAsync(viewModel.Email, viewModel.Password, token);
 
-                HttpContext.Session.SetInt32("IdAccount", account.IdAccount);
-                HttpContext.Session.SetInt32("IsAdmin", account.IsAdmin ? 1 : 0);
+                await _twilio.SendVerificationCodeAsync(account.Phone);
 
-                if (account.IsAdmin)
-                    return Redirect("/Private/Admin/Dashboard");
-
-                return Redirect("/Private/Welcome");
+                return new JsonResult(new 
+                { 
+                    phoneLast4 = account.Phone[6..], 
+                    idAccount = account.IdAccount 
+                });
             }
             catch (AccountNotFoundException)
             {
-                return Page();
+                return Unauthorized();
+            }
+            catch (ApiException e)
+            {
+                return Redirect(e.MoreInfo);
+                // return new ConflictResult();
+            }
+        }
+
+        public async Task<IActionResult> OnPostCheckOtp([FromBody] OtpViewModel viewModel, CancellationToken token = default)
+        {
+            if (!Valid.ViewModel(viewModel))
+                return BadRequest();
+
+            try
+            {
+                var account = await _accountRepo.GetAccountByIdAsync(viewModel.IdAccount, token);
+
+                var checkStatus = await _twilio.CheckVerificationCodeAsync(account.Phone, viewModel.Otp);
+
+                if (checkStatus == "approved")
+                {
+                    HttpContext.Session.SetInt32("IdAccount", account.IdAccount);
+                    HttpContext.Session.SetInt32("IsAdmin", account.IsAdmin ? 1 : 0);
+
+                    if (account.IsAdmin)
+                        return Redirect("/Private/Admin/Dashboard");
+                    else
+                        return Redirect("/Private/Home");
+                }
+                else if (checkStatus == "pending")
+                    return new EmptyResult();
+                else
+                    return Unauthorized();
+            }
+            catch (AccountNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ApiException)
+            {
+                return Unauthorized();
             }
         }
     }

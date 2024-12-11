@@ -10,7 +10,7 @@ namespace ResortRecommendationGenerator.Core.Services.Static
             {
                 var vc = new ValidationContext(viewModel);
 
-                Validator.ValidateObject(viewModel, vc);
+                Validator.ValidateObject(viewModel, vc, true);
             }
             catch
             {

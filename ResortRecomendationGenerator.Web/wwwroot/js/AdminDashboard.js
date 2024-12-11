@@ -1,7 +1,11 @@
-﻿import ResortListHandler from './Modules/ResortListHandler.js';
-import AddResortFormHandler from './Modules/AddResortFormHandler.js';
-import EditResortFormHandler from './Modules/EditResortFormHandler.js';
+﻿import ResortListHandler from './Modules/SkiResortHandlers/ResortListHandler.js';
+import AddResortFormHandler from './Modules/SkiResortHandlers/AddResortFormHandler.js';
+import EditResortFormHandler from './Modules/SkiResortHandlers/EditResortFormHandler.js';
+import PotentialResortListHandler from './Modules/SkiResortHandlers/PotentialResortListHandler.js';
+import PotentialResortModalHandler from './Modules/SkiResortHandlers/PotentialResortModalHandler.js';
 
-const resortListHandler = new ResortListHandler();
-const addResortFormHandler = new AddResortFormHandler();
-const editResortFormHandler = new EditResortFormHandler();
+new ResortListHandler();
+new AddResortFormHandler();
+new EditResortFormHandler();
+new PotentialResortListHandler();
+new PotentialResortModalHandler();

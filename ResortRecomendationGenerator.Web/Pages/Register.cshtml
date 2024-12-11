@@ -8,59 +8,68 @@
     <div class="row">
         <h1 class="col-12">Create an Account</h1>
     </div>
-    <form method="post" asp-page-handler="Register">
+    <form id="RegisterForm" method="post">
         <div class="row mt-2">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input asp-for="ViewModel.FirstName" class="form-control" placeholder=" " />
-                <label for="ViewModel_FirstName" class="form-label text-dark ms-2">First Name</label>
-                <span class="text-danger" asp-validation-for="ViewModel.FirstName"></span>
+                <input id="FirstName" name="firstName" class="form-control" placeholder=" " />
+                <label for="FirstName" class="form-label text-dark ms-2">First Name</label>
+                <span id="FirstNameValidation" class="text-danger"></span>
             </div>
             <div class="col-4"></div>
         </div>
         <div class="row mt-2">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input asp-for="ViewModel.LastName" class="form-control" placeholder=" " />
-                <label for="ViewModel_LastName" class="form-label text-dark ms-2">Last Name</label>
-                <span class="text-danger" asp-validation-for="ViewModel.LastName"></span>
+                <input id="LastName" name="lastName" class="form-control" placeholder=" " />
+                <label for="LastName" class="form-label text-dark ms-2">Last Name</label>
+                <span id="LastNameValidation" class="text-danger"></span>
             </div>
             <div class="col-4"></div>
         </div>
         <div class="row mt-2">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input asp-for="ViewModel.Email" class="form-control" placeholder=" " />
-                <label for="ViewModel_Email" class="form-label text-dark ms-2">Email</label>
-                <span class="text-danger" asp-validation-for="ViewModel.Email"></span>
+                <input id="Phone" name="phone" class="form-control" placeholder=" " />
+                <label for="Phone" class="form-label text-dark ms-2">Phone</label>
+                <span id="PhoneValidation" class="text-danger"></span>
             </div>
             <div class="col-4"></div>
         </div>
         <div class="row mt-2">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input asp-for="ViewModel.Password" class="form-control" placeholder=" " type="password" />
-                <label for="ViewModel_Password" class="form-label text-dark ms-2">Password</label>
-                <span class="text-danger" asp-validation-for="ViewModel.Password"></span>
+                <input id="Email" name="email" class="form-control" placeholder=" " />
+                <label for="Email" class="form-label text-dark ms-2">Email</label>
+                <span id="EmailValidation" class="text-danger"></span>
             </div>
             <div class="col-4"></div>
         </div>
         <div class="row mt-2">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input id="ConfirmPassword" class="form-control" placeholder=" " type="password" />
+                <input id="Password" name="password" class="form-control" placeholder=" " type="password" />
+                <label for="Password" class="form-label text-dark ms-2">Password</label>
+                <span id="PasswordValidation" class="text-danger"></span>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <div class="form-floating col-4">
+                <input id="ConfirmPassword" name="confirmPassword" class="form-control" placeholder=" " type="password" />
                 <label for="ConfirmPassword" class="form-label text-dark ms-2">Confirm Password</label>
             </div>
             <div class="col-4"></div>
         </div>
-        <div class="row mt-3">
-            <div class="col-4"></div>
-            <button id="BtnSubmit" type="submit" class="col-4 btn btn-success" disabled>Register</button>
-            <div class="col-4"></div>
-        </div>
-        <div class="row mt-1">
+        <div class="row mt-2">
             <div class="col-4"></div>
             <span id="ErrorMessage" class="col-4 text-danger"></span>
+            <div class="col-4"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4"></div>
+            <button id="BtnRegister" type="button" class="col-4 btn btn-success" disabled>Register</button>
             <div class="col-4"></div>
         </div>
         <div class="row mt-2">
@@ -71,43 +80,39 @@
     </form>
 </div>
 
+@section Modals {
+
+
+    <div class="modal fade" id="OtpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="OtpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="OtpModalLabel"></h1>
+                </div>
+                <div id="OtpModalBody" class="modal-body container">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col form-floating">
+                            <input id="Otp" class="form-control" placeholder=" " type="text" />
+                            <label for="Otp" class="form-label ms-2">One Time Password</label>
+                            <span id="OtpValidation" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnClearOtp" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="BtnSubmitOtp" type="button" class="btn btn-success">Check OTP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
 @section Scripts {
 
-    <script>
+    <script src="~/js/ConfirmPassword.js"></script>
 
-        const txtPass = document.querySelector('#ViewModel_Password');
-        const txtConfirmPass = document.querySelector('#ConfirmPassword');
-
-        const btnSubmit = document.querySelector('#BtnSubmit');
-
-        const errorMsgBox = document.querySelector('#ErrorMessage');
-
-        for (const element of [txtPass, txtConfirmPass])
-            element.addEventListener('keyup', checkPassMatch);
-
-        function checkPassMatch() {
-            errorMsgBox.textContent = '';
-
-            let pass = txtPass.value.trim();
-            let confirmPass = txtConfirmPass.value.trim();
-
-            if (pass === '' && confirmPass === '')
-                return;
-
-            if (pass === confirmPass) {
-                errorMsgBox.setAttribute('class', 'text-success');
-                errorMsgBox.textContent = 'Passwords match!';
-
-                btnSubmit.disabled = false;
-            }
-            else {
-                errorMsgBox.setAttribute('class', 'text-danger');
-                errorMsgBox.textContent = 'Passwords do not match!';
-
-                btnSubmit.disabled = true;
-            }
-        }
-
-    </script>
+    <script src="~/js//RegisterHandler.js" type="module"></script>
 
 }

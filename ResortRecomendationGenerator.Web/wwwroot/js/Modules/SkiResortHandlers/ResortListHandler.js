@@ -1,4 +1,5 @@
-﻿import ApiKey from '../Modules/ApiKey.js';
+﻿import createElement from '../Helpers/CreateElement.js';
+import ApiKey from '../Helpers/ApiKey.js';
 
 class ResortListHandler {
     constructor() {
@@ -48,19 +49,18 @@ class ResortListHandler {
         let btn;
 
         for (const resort of searchResults) {
+            row = createElement('div', { class: 'row mt-1 rounded fs-4 text-center resort-list-item' });
 
-            row = this.createElement('div', { class: 'row mt-1 rounded fs-4 text-center', id: 'ResortListItem' });
+            col = createElement('div', { class: 'col-8' });
 
-            col = this.createElement('div', { class: 'col-8' });
-
-            span = this.createElement('span', { class: 'text-dark', textContent: resort.name })
+            span = createElement('span', { class: 'text-dark', textContent: resort.name })
 
             col.appendChild(span);
             row.appendChild(col);
 
-            col = this.createElement('div', { class: 'col-2 pb-1' });
+            col = createElement('div', { class: 'col-2 pb-1' });
 
-            btn = this.createElement('button', { type: 'button', class: 'btn btn-info', textContent: 'Edit', 'data-bs-toggle': 'modal', 'data-bs-target': '#EditResortModal' });
+            btn = createElement('button', { type: 'button', class: 'btn btn-info', textContent: 'Edit', 'data-bs-toggle': 'modal', 'data-bs-target': '#EditResortModal' });
              
             btn.addEventListener('click', () => {
                 const editForm = document.querySelector('#EditResortForm');
@@ -71,9 +71,9 @@ class ResortListHandler {
             col.appendChild(btn);
             row.appendChild(col);
 
-            col = this.createElement('div', { class: 'col-2 pb-1' });
+            col = createElement('div', { class: 'col-2 pb-1' });
 
-            btn = this.createElement('button', { type: 'button', class: 'btn btn-danger', textContent: 'Delete' });
+            btn = createElement('button', { type: 'button', class: 'btn btn-danger', textContent: 'Delete' });
 
             btn.addEventListener('click', () => { this.deleteResort(resort.idSkiResort); });
 
@@ -89,15 +89,25 @@ class ResortListHandler {
             if (!confirm('Are you sure you want to delete this resort?'))
                 return;
 
+            const verificationToken = this.resortListContainer.parentElement
+                .querySelector('[name=__RequestVerificationToken]').value;
+
             const options = {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': verificationToken
+                },
+                body: JSON.stringify(idSkiResort)
             }
 
-            const res = await fetch(`/api/SkiResort/DeleteResort/${idSkiResort}?key=${ApiKey}`, options);
+            const res = await fetch(`?handler=SkiResort`, options);
+
+            if (res.redirected) {
+                location.replace(res.url);
+                return;
+            }
 
             if (!res.ok)
                 throw new Error(res.status);
@@ -107,32 +117,20 @@ class ResortListHandler {
             alert('Successfully Deleted Resort');
         }
         catch (e) {
-            console.log(e.message);
-        }
-    }
-
-    createElement = (tagName, attributes) => {
-        const element = document.createElement(tagName);
-
-        for (let key in attributes) {
-            if (key === 'textContent')
-                element.textContent = attributes[key];
+            if (e.message == 404)
+                alert('Ski resort not found');
             else
-                element.setAttribute(key, attributes[key]);
+                alert('There was an error deleting the ski resort');
         }
-
-        return element;
     }
 
     addEventListeners = () => {
-
         this.txtResortSearch.addEventListener('keyup', this.populateResortContainer);
 
         this.resortListContainer.addEventListener('refresh', async () => {
             await this.getResorts();
             this.populateResortContainer();
         });
-
     }
 
 }

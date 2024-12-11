@@ -12,5 +12,6 @@ namespace ResortRecommendationGenerator.Core.DataAccess
         public DbSet<EncryptedAccount> Account { get; set; }
         public DbSet<EncryptedApiKey> ApiKey { get; set; }
         public DbSet<SkiResort> SkiResort { get; set; }
+        public DbSet<PotentialSkiResort> PotentialSkiResort { get; set; }
     }
 }

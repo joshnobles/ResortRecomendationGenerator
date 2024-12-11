@@ -11,6 +11,10 @@ namespace ResortRecommendationGenerator.Core.Models.EncryptedModels
 
         public int IdAccount { get; set; }
 
+        public byte[] Name { get; set; } = [];
+
         public byte[] Value { get; set; } = [];
+
+        public byte[]? AllowedHost { get; set; }
     }
 }

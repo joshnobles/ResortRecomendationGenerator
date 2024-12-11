@@ -18,12 +18,12 @@ namespace ResortRecommendationGenerator.Core.Services.Implementations
             _security = security;
         }
 
-        public async Task<bool> AccountExistsAsync(string email, CancellationToken token)
+        public async Task<bool> AccountExistsAsync(string email, string phone, CancellationToken token)
         {
             var encEmail = await _security.EncryptAsync(email);
+            var encPhone = await _security.EncryptAsync(phone);
 
-            return await _context.Account
-                .AnyAsync(a => a.Email.SequenceEqual(encEmail), token);
+            return await _context.Account.AnyAsync(a => a.Email.SequenceEqual(encEmail), token) || await _context.Account.AnyAsync(a => a.Phone.SequenceEqual(encPhone), token);
         }
 
         public async Task<Account> GetAccountByIdAsync(int idAccount, CancellationToken token)
@@ -39,6 +39,7 @@ namespace ResortRecommendationGenerator.Core.Services.Implementations
                 FirstName = await _security.DecryptAsync(encAccount.FirstName),
                 LastName = await _security.DecryptAsync(encAccount.LastName),
                 Email = await _security.DecryptAsync(encAccount.Email),
+                Phone = await _security.DecryptAsync(encAccount.Phone),
                 IsAdmin = encAccount.IsAdmin
             };
         }
@@ -60,13 +61,15 @@ namespace ResortRecommendationGenerator.Core.Services.Implementations
                 FirstName = await _security.DecryptAsync(encAccount.FirstName),
                 LastName = await _security.DecryptAsync(encAccount.LastName),
                 Email = await _security.DecryptAsync(encAccount.Email),
+                Phone = await _security.DecryptAsync(encAccount.Phone),
                 IsAdmin = encAccount.IsAdmin
             };
         }
 
-        public async Task<int> AddAccountAsync(string email, string password, string firstName, string lastName, bool isAdmin, CancellationToken token)
+        public async Task<int> AddAccountAsync(string email, string phone, string password, string firstName, string lastName, bool isAdmin, CancellationToken token)
         {
             var encEmail = await _security.EncryptAsync(email);
+            var encPhone = await _security.EncryptAsync(phone);
             var hashPassword = await _security.HashAsync(password);
             var encFirstName = await _security.EncryptAsync(firstName);
             var encLastName = await _security.EncryptAsync(lastName);
@@ -79,6 +82,7 @@ namespace ResortRecommendationGenerator.Core.Services.Implementations
                 FirstName = encFirstName,
                 LastName = encLastName,
                 Email = encEmail,
+                Phone = encPhone,
                 Password = hashPassword,
                 IsAdmin = isAdmin
             };

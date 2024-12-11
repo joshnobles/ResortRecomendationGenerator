@@ -1,4 +1,5 @@
-﻿import ApiKey from '../Modules/ApiKey.js';
+﻿import ApiKey from './Modules/Helpers/ApiKey.js';
+import showErrorMessage from './Modules/Helpers/ShowErrorMessage.js';
 
 const epicLayer = L.layerGroup(),
     ikonLayer = L.layerGroup(),
@@ -6,7 +7,7 @@ const epicLayer = L.layerGroup(),
     otherLayer = L.layerGroup();
 
 const map = L.map('map', {
-    center: [40, 40],
+    center: [42.204469, -74.210372],
     zoom: 4,
     maxZoom: 19,
     layers: [epicLayer, ikonLayer, indyLayer, otherLayer]
@@ -25,9 +26,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-getSkiResorts(map, [epicLayer, ikonLayer, indyLayer, otherLayer]);
+getSkiResorts([epicLayer, ikonLayer, indyLayer, otherLayer]);
 
-async function getSkiResorts(map, layers) {
+async function getSkiResorts(layers) {
     try {
         const res = await fetch(`/api/SkiResort/?key=${ApiKey}`);
 
@@ -60,31 +61,33 @@ async function getSkiResorts(map, layers) {
 
         await Promise.all(promises);
     }
-    catch {
-        alert('An error occurred getting ski resorts');
+    catch (e) {
+        showErrorMessage('An error occurred getting the resort list');
     }
 }
 
 function getPopupContent(resort) {
-    let result = '<div class="container text-center p-0">';
-
-    result += '<div class="row">'
-    result += '<strong class="col">Name</strong>';
-    result += `<span class="col">${encodeHTML(resort.name)}</span>`
-    result += '</div>';
-
-    result += '<div class="row">'
-    result += '<strong class="col">Elevation</strong>';
-    result += `<span class="col">${encodeHTML(resort.elevation)}</span>`
-    result += '</div>';
-
-    result += '</div>';
+    const result = `
+        <div class="container w-100 p-0"">
+            <div class="row">
+                <div class="col-12">
+                    <strong>${encodeHTML(resort.name)}</strong>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <span>${encodeHTML(resort.description)}</span>
+                </div>
+            </div>
+        </div>
+    `;
 
     return result;
 }
 
 function encodeHTML(text) {
-    let textArea = document.createElement('textarea');
-    textArea.textContent = text;
-    return textArea.innerHTML;
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }

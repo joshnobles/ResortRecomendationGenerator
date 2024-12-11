@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ResortRecomendationGenerator.Web.ValidationAttributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace ResortRecomendationGenerator.Web.ViewModels
 {
@@ -7,7 +8,7 @@ namespace ResortRecomendationGenerator.Web.ViewModels
         [Required]
         [StringLength(50)]
         [RegularExpression(@"^[A-Za-z0-9 '-]{4,50}$")]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = null!;
         
         [Required]
         public double Elevation { get; set; }
@@ -44,6 +45,9 @@ namespace ResortRecomendationGenerator.Web.ViewModels
 
         [Required]
         public bool IsIndyPass { get; set; }
+
+        [Required]
+        public string Description { get; set; } = null!;
 
         [Required]
         public double Latitude { get; set; }

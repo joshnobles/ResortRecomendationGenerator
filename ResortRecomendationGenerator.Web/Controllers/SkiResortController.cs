@@ -2,11 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ResortRecomendationGenerator.Web.ViewModels;
 using ResortRecommendationGenerator.Core.DataAccess;
-using ResortRecommendationGenerator.Core.Exceptions;
 using ResortRecommendationGenerator.Core.Models.DecryptedModels;
-using ResortRecommendationGenerator.Core.Services.Implementations;
 using ResortRecommendationGenerator.Core.Services.Interfaces;
-using ResortRecommendationGenerator.Core.Services.Static;
 
 namespace ResortRecomendationGenerator.Web.Controllers
 {
@@ -26,7 +23,7 @@ namespace ResortRecomendationGenerator.Web.Controllers
         [HttpGet("")]
         public async Task<ActionResult<List<SkiResort>>> GetAllResortsAsync([FromQuery] string key, CancellationToken token = default)
         {
-            if (!await _apiKeyRepo.TryValidateKeyAsync(key, false, token))
+            if (!await _apiKeyRepo.TryValidateKeyAsync(key, GetHostName(HttpContext), false, token))
                 return Unauthorized("Invalid API Key");
 
             var resorts = await _context.SkiResort
@@ -36,9 +33,9 @@ namespace ResortRecomendationGenerator.Web.Controllers
         }
 
         [HttpGet("{idSkiResort:int}")]
-        public async Task<ActionResult<SkiResort>> GetResortByIdAsync([FromRoute] int idSkiResort, [FromQuery] string key, CancellationToken token = default)
+        public async Task<IActionResult> GetResortByIdAsync([FromRoute] int idSkiResort, [FromQuery] string key, CancellationToken token = default)
         {
-            if (!await _apiKeyRepo.TryValidateKeyAsync(key, false, token))
+            if (!await _apiKeyRepo.TryValidateKeyAsync(key, GetHostName(HttpContext), false, token))
                 return Unauthorized("Invalid API Key");
 
             var resort = await _context.SkiResort.FirstOrDefaultAsync(s => s.IdSkiResort == idSkiResort, token);
@@ -46,22 +43,25 @@ namespace ResortRecomendationGenerator.Web.Controllers
             if (resort is null)
                 return NotFound();
 
-            return Ok(resort);
+            return new JsonResult(resort);
         }
 
         [HttpPost("AddResort")]
-        public async Task<IActionResult> AddResortAsync([FromBody] NewSkiResortViewModel viewModel, [FromQuery] string key, CancellationToken token = default)
+        public async Task<IActionResult> AddResort([FromBody] NewSkiResortViewModel viewModel, [FromQuery] string key, CancellationToken token = default)
         {
-            if (!await _apiKeyRepo.TryValidateKeyAsync(key, true, token))
-                return Unauthorized("You do not have access to this endpoint");
+            if (!await _apiKeyRepo.TryValidateKeyAsync(key, GetHostName(HttpContext), false, token))
+                return Unauthorized("Invalid API Key");
 
-            if (!Valid.ViewModel(viewModel))
-                return BadRequest();
+            var resortExists1 = await _context.SkiResort
+                .AnyAsync(s => s.Name.ToLower() == viewModel.Name.ToLower(), token);
 
-            if (await _context.SkiResort.AnyAsync(r => r.Name.ToLower() == viewModel.Name.ToLower(), token))
-                return Conflict();
+            var resortExists2 = await _context.PotentialSkiResort
+                .AnyAsync(s => s.Name.ToLower() == viewModel.Name.ToLower(), token);
 
-            var newResort = new SkiResort()
+            if (resortExists1 || resortExists2)
+                return Conflict("This resort already exists");
+
+            var potentialResort = new PotentialSkiResort()
             {
                 Name = viewModel.Name,
                 Elevation = viewModel.Elevation,
@@ -76,67 +76,20 @@ namespace ResortRecomendationGenerator.Web.Controllers
                 IsEpicPass = viewModel.IsEpicPass,
                 IsIkonPass = viewModel.IsIkonPass,
                 IsIndyPass = viewModel.IsIndyPass,
+                Description = viewModel.Description,
                 Latitude = viewModel.Latitude,
-                Longitude = viewModel.Longitude,
+                Longitude = viewModel.Longitude
             };
 
-            await _context.SkiResort.AddAsync(newResort, CancellationToken.None);
-            await _context.SaveChangesAsync(CancellationToken.None);
-
-            return Ok();
-        }
-
-        [HttpPut("EditResort")]
-        public async Task<IActionResult> EditResortAsync([FromBody] EditSkiResortViewModel viewModel, [FromQuery] string key, CancellationToken token = default)
-        {
-            if (!await _apiKeyRepo.TryValidateKeyAsync(key, true, token))
-                return Unauthorized("You do not have access to this endpoint");
-
-            if (!Valid.ViewModel(viewModel))
-                return BadRequest();
-
-            var currentResort = await _context.SkiResort.FirstOrDefaultAsync(r => r.IdSkiResort == viewModel.IdSkiResort, token);
-
-            if (currentResort is null)
-                return NotFound();
-
-            currentResort.Name = viewModel.Name;
-            currentResort.Elevation = viewModel.Elevation;
-            currentResort.TotalRuns = viewModel.TotalRuns;
-            currentResort.GreenPercent = viewModel.GreenPercent;
-            currentResort.BluePercent = viewModel.BluePercent;
-            currentResort.BlackPercent = viewModel.BlackPercent;
-            currentResort.TerrainParkNum = viewModel.TerrainParkNum;
-            currentResort.SnowmakingCoverage = viewModel.SnowmakingCoverage;
-            currentResort.SkiableAcres = viewModel.SkiableAcres;
-            currentResort.NumLifts = viewModel.NumLifts;
-            currentResort.IsEpicPass = viewModel.IsEpicPass;
-            currentResort.IsIkonPass = viewModel.IsIkonPass;
-            currentResort.IsIndyPass = viewModel.IsIndyPass;
-            currentResort.Latitude = viewModel.Latitude;
-            currentResort.Longitude = viewModel.Longitude;
+            await _context.PotentialSkiResort
+                .AddAsync(potentialResort, CancellationToken.None);
 
             await _context.SaveChangesAsync(CancellationToken.None);
 
-            return Ok();
+            return Ok("Thank you for your submission, it will be reviewed before addition to our resort list!");
         }
 
-        [HttpDelete("DeleteResort/{idSkiResort:int}")]
-        public async Task<IActionResult> DeleteResortAsync([FromRoute] int idSkiResort, [FromQuery] string key, CancellationToken token = default)
-        {
-            if (!await _apiKeyRepo.TryValidateKeyAsync(key, true, token))
-                return Unauthorized("You do not have access to this endpoint");
-
-            var skiResort = await _context.SkiResort.FirstOrDefaultAsync(r => r.IdSkiResort == idSkiResort, token);
-            
-            if (skiResort is null)
-                return BadRequest();
-
-            _context.SkiResort.Remove(skiResort);
-            await _context.SaveChangesAsync(CancellationToken.None);
-
-            return Ok();
-        }
+        private static string GetHostName(HttpContext context) => context.Request.Host.Host;
 
     }
 }

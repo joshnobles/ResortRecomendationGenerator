@@ -1,0 +1,89 @@
+﻿@page
+@model ResortRecomendationGenerator.Web.Pages.Private.MyApiKeysModel
+@{
+    ViewData["Title"] = "RRG - My API Keys";
+}
+
+<div class="text-center text-light">
+    <div class="row">
+        <h1 class="col-12">My API Keys</h1>
+    </div>
+    <div class="row mt-3">
+        <div class="col-4"></div>
+        <button type="button" class="btn btn-primary col-4" data-bs-toggle="modal" data-bs-target="#RegisterApiKeyModal">Register New Key</button>
+        <div class="col-4"></div>
+    </div>
+
+    <div id="ApiKeyListContainer" class="row mt-5 container"></div>
+</div>
+
+@section Modals {
+    <div class="modal fade" id="RegisterApiKeyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="RegisterApiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="RegisterApiKeyModalLabel">Register New Key</h1>
+                </div>
+                <div class="modal-body container">
+                    <form id="RegisterApiKeyForm">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-12 form-floating">
+                                <input id="AddApiKeyName" name="name" class="form-control" placeholder=" " />
+                                <label for="AddApiKeyName" class="form-label ms-2">Name</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12 form-floating">
+                                <input id="AddApiKeyAllowedHost" name="allowedHost" class="form-control" placeholder=" " />
+                                <label for="NewApiKeyViewModel_AllowedHost" class="form-label ms-2">Allowed Host (Leave empty for unrestricted access)</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnClearAddApiKeyForm" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="BtnSubmitAddApiKeyForm" type="button" class="btn btn-primary">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditApiKeyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EditApiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditApiKeyModalLabel">Edit API Key</h1>
+                </div>
+                <div class="modal-body container">
+                    <form id="EditApiKeyForm">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-12 form-floating">
+                                <input id="EditApiKeyName" name="name" class="form-control" placeholder=" " />
+                                <label for="EditApiKeyName" class="form-label ms-2">Name</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12 form-floating">
+                                <input id="EditApiKeyAllowedHost" name="allowedHost" class="form-control" placeholder=" " />
+                                <label for="EditApiKeyAllowedHost" class="form-label ms-2">Allowed Host (Leave empty for unrestricted access)</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnClearEditApiKeyForm" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="BtnSubmitEditApiKeyForm" type="button" class="btn btn-success">Save Changes</button>
+                    <button id="BtnDeleteApiKey" type="button" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+    <script src="~/js/MyApiKeys.js" type="module"></script>
+
+}

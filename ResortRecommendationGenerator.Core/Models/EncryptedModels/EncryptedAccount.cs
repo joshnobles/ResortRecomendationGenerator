@@ -15,6 +15,8 @@ namespace ResortRecommendationGenerator.Core.Models.EncryptedModels
 
         public byte[] Email { get; set; } = [];
 
+        public byte[] Phone { get; set; } = [];
+
         public byte[] Password { get; set; } = [];
         
         public bool IsAdmin { get; set; }

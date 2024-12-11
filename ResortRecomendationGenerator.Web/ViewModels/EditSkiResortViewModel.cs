@@ -49,6 +49,9 @@ namespace ResortRecomendationGenerator.Web.ViewModels
         public bool IsIndyPass { get; set; }
 
         [Required]
+        public string Description { get; set; } = string.Empty;
+
+        [Required]
         public double Latitude { get; set; }
 
         [Required]

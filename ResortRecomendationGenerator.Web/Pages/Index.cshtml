@@ -4,32 +4,41 @@
     ViewData["Title"] = "RRG - Login";
 }
 
-<div id="LoginForm" class="text-center text-light">
+<div class="text-center text-light">
     <div class="row">
         <h1 class="col-12">Please Login</h1>
     </div>
-    <form method="post" asp-page-handler="Login">
+    @if (TempData["LoginFailed"] is not null)
+    {
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="alert alert-danger col-4" role="alert">@TempData["LoginFailed"]</div>
+            <div class="col-4"></div>
+        </div>
+    }
+    <form id="LoginForm">
+        @Html.AntiForgeryToken()
         <div class="row">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input class="form-control" asp-for="ViewModel.Email" placeholder=" " />
-                <label for="ViewModel_Email" class="form-label text-dark ms-2">Email</label>
-                <span class="text-danger" asp-validation-for="ViewModel.Email"></span>
+                <input id="Email" class="form-control" name="email" placeholder=" " />
+                <label for="Email" class="form-label text-dark ms-2">Email</label>
+                <span id="EmailValidation" class="text-danger"></span>
             </div>
             <div class="col-4"></div>
         </div>
         <div class="row mt-2">
             <div class="col-4"></div>
             <div class="form-floating col-4">
-                <input class="form-control" asp-for="ViewModel.Password" placeholder=" " type="password" />
-                <label for="ViewModel_Password" class="form-label text-dark ms-2">Password</label>
-                <span class="text-danger" asp-validation-for="ViewModel.Password"></span>
+                <input id="Password" class="form-control" name="password" placeholder=" " type="password" />
+                <label for="Password" class="form-label text-dark ms-2">Password</label>
+                <span id="PasswordValidation" class="text-danger"></span>
             </div>
             <div class="col-4"></div>
         </div>
         <div class="row mt-3">
             <div class="col-4"></div>
-            <button type="submit" class="col-4 btn btn-success">Login</button>
+            <button id="BtnLogin" type="button" class="col-4 btn btn-success">Login</button>
             <div class="col-4"></div>
         </div>
         <div class="row mt-1">
@@ -37,5 +46,45 @@
             <span class="col-4">Don't have an account? <a class="link-primary" href="/Register">Register</a></span>
             <div class="col-4"></div>
         </div>
+        <div class="row mt-2">
+            <div class="col-4"></div>
+            <span id="LoginValidation" class="col-4 text-danger"></span>
+            <div class="col-4"></div>
+        </div>
     </form>
 </div>
+
+@section Modals {
+
+
+    <div class="modal fade" id="OtpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="OtpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="OtpModalLabel"></h1>
+                </div>
+                <div id="OtpModalBody" class="modal-body container">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col form-floating">
+                            <input id="Otp" class="form-control" placeholder=" " type="text" />
+                            <label for="Otp" class="form-label ms-2">One Time Password</label>
+                            <span id="OtpValidation" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnClearOtp" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="BtnSubmitOtp" type="button" class="btn btn-success">Check OTP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+
+    <script src="~/js/LoginHandler.js" type="module"></script>
+
+}
